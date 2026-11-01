@@ -1,5 +1,7 @@
 package co.edu.ucompensar.losatuendos.reporte;
 
+import co.edu.ucompensar.losatuendos.util.Constantes;
+
 /**
  * HTML sencillo que entiende el {@code JEditorPane} de Swing.
  */
@@ -7,12 +9,12 @@ public class FormatoHtml implements FormatoSalida {
 
     @Override
     public String titulo(String texto) {
-        return "<h2 style='color:#1f3a68'>" + escapar(texto) + "</h2>";
+        return "<h2 style='color:" + Constantes.COLOR_OSCURO + "'>" + escapar(texto) + "</h2>";
     }
 
     @Override
     public String seccion(String texto) {
-        return "<h3 style='color:#2f4a7a'>" + escapar(texto) + "</h3>";
+        return "<h3 style='color:" + Constantes.COLOR_PRINCIPAL + "'>" + escapar(texto) + "</h3>";
     }
 
     @Override

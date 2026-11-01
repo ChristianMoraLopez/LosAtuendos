@@ -11,7 +11,9 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.URL;
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -28,6 +30,9 @@ import javax.swing.WindowConstants;
 public class VentanaPrincipal extends JFrame {
 
     private static final long serialVersionUID = 1L;
+    private static final int ICONO_PESTANA = 20;
+    private static final int LOGO_CABECERA = 56;
+    private static final int LOGO_DIALOGO = 64;
 
     /** Operación de la interfaz que puede fallar con un error de negocio. */
     @FunctionalInterface
@@ -43,18 +48,22 @@ public class VentanaPrincipal extends JFrame {
         super(Constantes.NOMBRE_NEGOCIO + " - Administración de alquiler de vestuario");
         this.fachada = fachada;
 
+        setIconImages(Recursos.iconosVentana());
         visor.setEditable(false);
         visor.setBackground(Color.WHITE);
         JScrollPane panelVisor = new JScrollPane(visor);
         panelVisor.setBorder(BorderFactory.createTitledBorder("Resultado"));
 
         JTabbedPane pestanas = new JTabbedPane();
-        pestanas.addTab("Registros", envolver(new PanelRegistros(this)));
-        pestanas.addTab("Alquileres", envolver(new PanelAlquileres(this)));
-        pestanas.addTab("Lavandería", envolver(new PanelLavanderia(this)));
+        pestanas.addTab("Registros", Recursos.icono("icono_registros.png", ICONO_PESTANA),
+                envolver(new PanelRegistros(this)));
+        pestanas.addTab("Alquileres", Recursos.icono("icono_alquileres.png", ICONO_PESTANA),
+                envolver(new PanelAlquileres(this)));
+        pestanas.addTab("Lavandería", Recursos.icono("icono_lavanderia.png", ICONO_PESTANA),
+                envolver(new PanelLavanderia(this)));
 
         JSplitPane division = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, pestanas, panelVisor);
-        division.setDividerLocation(440);
+        division.setDividerLocation(470);
         getContentPane().add(cabecera(), BorderLayout.NORTH);
         getContentPane().add(division, BorderLayout.CENTER);
 
@@ -67,8 +76,7 @@ public class VentanaPrincipal extends JFrame {
         });
         setMinimumSize(new Dimension(980, 640));
         setLocationRelativeTo(null);
-        mostrar(formatoPantalla.documento(formatoPantalla.titulo(Constantes.NOMBRE_NEGOCIO)
-                + formatoPantalla.aviso("Seleccione una operación en las pestañas de la izquierda.")));
+        mostrarBienvenida();
     }
 
     LosAtuendosFacade fachada() {
@@ -85,7 +93,21 @@ public class VentanaPrincipal extends JFrame {
     }
 
     void informar(String mensaje) {
-        JOptionPane.showMessageDialog(this, mensaje, Constantes.NOMBRE_NEGOCIO, JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, mensaje, Constantes.NOMBRE_NEGOCIO, JOptionPane.INFORMATION_MESSAGE,
+                logoDialogo());
+    }
+
+    Icon logoDialogo() {
+        return Recursos.icono("logo.png", LOGO_DIALOGO);
+    }
+
+    private void mostrarBienvenida() {
+        URL logo = Recursos.url("logo.png");
+        String imagen = logo == null ? "" : "<img src='" + logo + "' width='220' height='220'><br>";
+        mostrar("<html><body style='font-family:sans-serif'><div align='center'><br><br>" + imagen
+                + "<h1 style='color:" + Constantes.COLOR_OSCURO + "'>" + Constantes.NOMBRE_NEGOCIO + "</h1>"
+                + "<p style='color:#555555'>Seleccione una operación en las pestañas de la izquierda.</p>"
+                + "</div></body></html>");
     }
 
     /** Ejecuta la acción y convierte cualquier error en un mensaje, sin cerrar la aplicación. */
@@ -102,17 +124,24 @@ public class VentanaPrincipal extends JFrame {
     }
 
     private static JPanel cabecera() {
+        JLabel logo = new JLabel(Recursos.icono("logo_blanco.png", LOGO_CABECERA));
+        logo.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 14));
         JLabel titulo = new JLabel(Constantes.NOMBRE_NEGOCIO);
         titulo.setFont(titulo.getFont().deriveFont(Font.BOLD, 24f));
         titulo.setForeground(Color.WHITE);
         JLabel subtitulo = new JLabel("Alquiler de vestidos de dama, trajes de caballero y disfraces");
         subtitulo.setForeground(Color.decode(Constantes.COLOR_SECUNDARIO));
 
-        JPanel cabecera = new JPanel(new BorderLayout(0, 2));
-        cabecera.setBackground(Color.decode(Constantes.COLOR_PRINCIPAL));
-        cabecera.setBorder(BorderFactory.createEmptyBorder(12, 18, 12, 18));
-        cabecera.add(titulo, BorderLayout.NORTH);
-        cabecera.add(subtitulo, BorderLayout.SOUTH);
+        JPanel textos = new JPanel(new BorderLayout(0, 2));
+        textos.setOpaque(false);
+        textos.add(titulo, BorderLayout.NORTH);
+        textos.add(subtitulo, BorderLayout.SOUTH);
+
+        JPanel cabecera = new JPanel(new BorderLayout());
+        cabecera.setBackground(Color.decode(Constantes.COLOR_OSCURO));
+        cabecera.setBorder(BorderFactory.createEmptyBorder(10, 18, 10, 18));
+        cabecera.add(logo, BorderLayout.WEST);
+        cabecera.add(textos, BorderLayout.CENTER);
         return cabecera;
     }
 

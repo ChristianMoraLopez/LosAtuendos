@@ -17,7 +17,7 @@ import javax.swing.JTextField;
 class Formulario extends JPanel {
 
     private static final long serialVersionUID = 1L;
-    private static final int COLUMNAS_CAMPO = 18;
+    private static final int COLUMNAS_CAMPO = 14;
 
     private int fila;
 

@@ -73,6 +73,6 @@ class PanelLavanderia extends JPanel {
         area.setEditable(false);
         area.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
         JOptionPane.showMessageDialog(ventana, new JScrollPane(area), "Envío a lavandería",
-                JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.INFORMATION_MESSAGE, ventana.logoDialogo());
     }
 }

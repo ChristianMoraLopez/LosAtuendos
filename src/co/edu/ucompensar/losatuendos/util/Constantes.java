@@ -8,8 +8,9 @@ import java.time.format.DateTimeFormatter;
 public final class Constantes {
 
     public static final String NOMBRE_NEGOCIO = "Los Atuendos";
-    public static final String COLOR_PRINCIPAL = "#1f3a68";
-    public static final String COLOR_SECUNDARIO = "#c9a227";
+    public static final String COLOR_PRINCIPAL = "#5b1a8a";
+    public static final String COLOR_OSCURO = "#2c0b45";
+    public static final String COLOR_SECUNDARIO = "#d9b3f2";
 
     /** Propiedad del sistema que permite apuntar a otra base de datos, por ejemplo en pruebas. */
     public static final String PROPIEDAD_URL_BD = "losatuendos.bd";

@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/logo.png" width="160" alt="Logo de Los Atuendos"></p>
+
 # Los Atuendos
 
 Aplicación de escritorio para administrar el alquiler de vestidos de dama, trajes de caballero y disfraces.
@@ -5,7 +7,7 @@ Actividad 4 de Patrones de Diseño de Software, Fundación Universitaria Compens
 
 **Autor y grupo:** Christian Rey Mora López
 
-![Consulta de servicios de un cliente](docs/capturas/app_servicios_cliente.png)
+![Pantalla principal](docs/capturas/app_registros.png)
 
 ## Cómo abrirla
 
