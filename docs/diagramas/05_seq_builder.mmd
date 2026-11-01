@@ -1,0 +1,22 @@
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"Arial","fontSize":"14px","primaryColor":"#e8eef7","primaryBorderColor":"#2f4a7a","primaryTextColor":"#1d2433","lineColor":"#5b6475","actorBkg":"#e8eef7","actorBorder":"#2f4a7a","noteBkgColor":"#fff7d6","noteBorderColor":"#c9a227"}}}%%
+sequenceDiagram
+autonumber
+participant F as LosAtuendosFacade
+participant B as ServicioAlquiler.Builder
+participant P as PrendaDAO
+participant SD as ServicioAlquilerDAO
+participant S as ServicioAlquiler
+F->>B: builder().fechaSolicitud(hoy).fechaAlquiler(fecha)
+F->>B: cliente(cliente).empleado(empleado)
+loop por cada referencia
+  F->>P: buscar(ref), estaDisponible(ref, fecha)
+  P-->>F: prenda disponible
+  F->>B: prenda(prenda)
+end
+F->>SD: siguienteNumero()
+SD-->>F: n
+F->>B: numero(n).build()
+B->>B: verificar que el servicio esté completo
+B->>S: new ServicioAlquiler(builder)
+B-->>F: servicio
+F->>SD: insertar(servicio)

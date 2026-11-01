@@ -1,0 +1,94 @@
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"Arial","fontSize":"14px","primaryColor":"#e8eef7","primaryBorderColor":"#2f4a7a","primaryTextColor":"#1d2433","lineColor":"#5b6475","actorBkg":"#e8eef7","actorBorder":"#2f4a7a","noteBkgColor":"#fff7d6","noteBorderColor":"#c9a227"}}}%%
+classDiagram
+direction TB
+class LosAtuendosFacade {
+  <<Facade>>
+  +registrarCliente(...) Cliente
+  +registrarEmpleado(...) Empleado
+  +registrarPrenda(DatosPrenda) Prenda
+  +registrarServicio(...) ServicioAlquiler
+  +consultarServicio(int) ServicioAlquiler
+  +consultarServiciosVigentes(String) List
+  +consultarServiciosPorFecha(LocalDate) List
+  +consultarPrendasPorTalla(String) GrupoPrendas
+  +registrarEnLavanderia(...)
+  +consultarListaLavanderia() List
+  +enviarALavanderia(int) EnvioLavanderia
+}
+class VentanaPrincipal
+class AccesoDatos {
+  ClienteDAO
+  EmpleadoDAO
+  PrendaDAO
+  ServicioAlquilerDAO
+  LavanderiaDAO
+}
+VentanaPrincipal --> LosAtuendosFacade
+LosAtuendosFacade --> AccesoDatos
+LosAtuendosFacade --> ServicioLavanderia
+
+class ServicioLavanderia {
+  <<interface>>
+  +enviar(List~ItemLavanderia~) String
+}
+class AdaptadorLavanderiaExterna {
+  +enviar(List~ItemLavanderia~) String
+}
+class LavanderiaExterna {
+  +recibirTanda(String[], boolean[]) int
+}
+ServicioLavanderia <|.. AdaptadorLavanderiaExterna
+AdaptadorLavanderiaExterna --> LavanderiaExterna : adapta
+
+class ItemLavanderia {
+  <<interface>>
+  +getOrdenLlegada() long
+  +getPrenda() Prenda
+  +esPrioritario() boolean
+  +getIndicaciones() List~String~
+}
+class PrendaEnLavanderia
+class DecoradorLavanderia {
+  <<abstract>>
+  -ItemLavanderia decorado
+  #getIndicacion() String*
+}
+class PrendaManchada
+class PrendaDelicada
+class PrioridadAdministrador
+ItemLavanderia <|.. PrendaEnLavanderia
+ItemLavanderia <|.. DecoradorLavanderia
+DecoradorLavanderia o--> ItemLavanderia : decorado
+DecoradorLavanderia <|-- PrendaManchada
+DecoradorLavanderia <|-- PrendaDelicada
+DecoradorLavanderia <|-- PrioridadAdministrador
+
+class Reporte {
+  <<abstract>>
+  #FormatoSalida formato
+  +generar() String
+  #cuerpo() String*
+}
+class FormatoSalida {
+  <<interface>>
+  +titulo(String) String
+  +campo(String, String) String
+  +elemento(String) String
+  +documento(String) String
+}
+class FormatoHtml
+class FormatoTexto
+class ReporteServicio
+class ReporteCliente
+class ReporteServiciosPorFecha
+class ReportePrendasPorTalla
+class ReporteLavanderia
+Reporte o--> FormatoSalida : puente
+FormatoSalida <|.. FormatoHtml
+FormatoSalida <|.. FormatoTexto
+Reporte <|-- ReporteServicio
+Reporte <|-- ReporteCliente
+Reporte <|-- ReporteServiciosPorFecha
+Reporte <|-- ReportePrendasPorTalla
+Reporte <|-- ReporteLavanderia
+VentanaPrincipal ..> Reporte

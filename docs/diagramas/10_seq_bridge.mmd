@@ -1,0 +1,18 @@
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"Arial","fontSize":"14px","primaryColor":"#e8eef7","primaryBorderColor":"#2f4a7a","primaryTextColor":"#1d2433","lineColor":"#5b6475","actorBkg":"#e8eef7","actorBorder":"#2f4a7a","noteBkgColor":"#fff7d6","noteBorderColor":"#c9a227"}}}%%
+sequenceDiagram
+autonumber
+participant V as PanelLavanderia
+participant R as ReporteLavanderia
+participant H as FormatoHtml
+participant T as FormatoTexto
+V->>R: new ReporteLavanderia(new FormatoHtml(), lista)
+V->>R: generar()
+R->>H: titulo(), campo(), elemento()
+H-->>R: fragmentos HTML
+R->>H: documento(cuerpo)
+H-->>V: HTML para el visor
+Note over V,T: Misma abstracción, otro implementador
+V->>R: new ReporteLavanderia(new FormatoTexto(), guía, enviadas)
+V->>R: generar()
+R->>T: titulo(), campo(), elemento()
+T-->>V: texto plano para la notificación

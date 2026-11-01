@@ -1,0 +1,20 @@
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"Arial","fontSize":"14px","primaryColor":"#e8eef7","primaryBorderColor":"#2f4a7a","primaryTextColor":"#1d2433","lineColor":"#5b6475","actorBkg":"#e8eef7","actorBorder":"#2f4a7a","noteBkgColor":"#fff7d6","noteBorderColor":"#c9a227"}}}%%
+sequenceDiagram
+autonumber
+actor U as Administrador
+participant V as PanelRegistros
+participant F as LosAtuendosFacade
+participant FP as FabricaPrenda
+participant FT as FabricaTrajeCaballero
+participant P as PrendaDAO
+U->>V: Registrar prenda (Traje de caballero)
+V->>F: registrarPrenda(datos)
+F->>FP: para(TRAJE_CABALLERO)
+FP-->>F: FabricaTrajeCaballero
+F->>FT: crear(datos)
+FT->>FT: validar datos comunes
+FT->>FT: crearPrenda(...) [método fábrica]
+FT-->>F: new TrajeCaballero(...)
+F->>P: insertar(prenda)
+F-->>V: prenda
+V-->>U: Prenda registrada

@@ -1,0 +1,21 @@
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"Arial","fontSize":"14px","primaryColor":"#e8eef7","primaryBorderColor":"#2f4a7a","primaryTextColor":"#1d2433","lineColor":"#5b6475","actorBkg":"#e8eef7","actorBorder":"#2f4a7a","noteBkgColor":"#fff7d6","noteBorderColor":"#c9a227"}}}%%
+sequenceDiagram
+autonumber
+participant D as ClienteDAO
+participant B as DaoBase
+participant S as ConexionBD
+participant H as DriverManager (H2)
+D->>B: conexion()
+B->>S: getInstancia()
+alt primera llamada
+  S->>S: instancia = new ConexionBD()
+end
+S-->>B: instancia única
+B->>S: getConexion()
+alt conexión nula o cerrada
+  S->>H: getConnection(url, usuario, clave)
+  H-->>S: Connection
+  S->>S: crearEsquema()
+end
+S-->>D: Connection compartida
+D->>D: prepareStatement(INSERT INTO cliente ...)

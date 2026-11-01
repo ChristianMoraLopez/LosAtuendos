@@ -1,0 +1,20 @@
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"Arial","fontSize":"14px","primaryColor":"#e8eef7","primaryBorderColor":"#2f4a7a","primaryTextColor":"#1d2433","lineColor":"#5b6475","actorBkg":"#e8eef7","actorBorder":"#2f4a7a","noteBkgColor":"#fff7d6","noteBorderColor":"#c9a227"}}}%%
+sequenceDiagram
+autonumber
+actor U as Administrador
+participant V as PanelLavanderia
+participant F as LosAtuendosFacade
+participant A as AdaptadorLavanderiaExterna
+participant L as LavanderiaExterna
+participant D as LavanderiaDAO
+U->>V: Enviar tanda (cantidad = 3)
+V->>F: enviarALavanderia(3)
+F->>F: consultarListaLavanderia(), tomar las 3 primeras
+F->>A: enviar(List de ItemLavanderia)
+A->>A: convertir a String[] y boolean[]
+A->>L: recibirTanda(referencias, urgentes)
+L-->>A: número de tanda
+A-->>F: guía LAV-aaaammdd-0001
+F->>D: eliminar(tanda)
+F-->>V: EnvioLavanderia(guía, prendas)
+V-->>U: Notificación con el listado enviado

@@ -1,0 +1,105 @@
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"Arial","fontSize":"14px","primaryColor":"#e8eef7","primaryBorderColor":"#2f4a7a","primaryTextColor":"#1d2433","lineColor":"#5b6475","actorBkg":"#e8eef7","actorBorder":"#2f4a7a","noteBkgColor":"#fff7d6","noteBorderColor":"#c9a227"}}}%%
+classDiagram
+direction TB
+class Persona {
+  <<abstract>>
+  -String identificacion
+  -String nombre
+  -String direccion
+  -String telefono
+}
+class Cliente {
+  -String correo
+}
+class Empleado {
+  -String cargo
+}
+Persona <|-- Cliente
+Persona <|-- Empleado
+
+class ComponenteAlquiler {
+  <<interface>>
+  +getNombre() String
+  +getValorAlquiler() BigDecimal
+  +getPrendas() List~Prenda~
+}
+class Prenda {
+  <<abstract>>
+  -String referencia
+  -String color
+  -String marca
+  -String talla
+  -BigDecimal valorAlquiler
+  +getTipo() TipoPrenda*
+  +getDetalle() String*
+}
+class GrupoPrendas {
+  -String nombre
+  -List~ComponenteAlquiler~ hijos
+  +agregar(ComponenteAlquiler)
+  +getValorAlquiler() BigDecimal
+}
+class VestidoDama {
+  -boolean pedreria
+  -boolean largo
+  -int cantidadPiezas
+}
+class TrajeCaballero {
+  -TipoTraje tipoTraje
+  -Accesorio accesorio
+}
+class Disfraz {
+  -String nombreDisfraz
+}
+ComponenteAlquiler <|.. Prenda
+ComponenteAlquiler <|.. GrupoPrendas
+GrupoPrendas o--> "0..*" ComponenteAlquiler : hijos
+Prenda <|-- VestidoDama
+Prenda <|-- TrajeCaballero
+Prenda <|-- Disfraz
+
+class ServicioAlquiler {
+  -int numero
+  -LocalDate fechaSolicitud
+  -LocalDate fechaAlquiler
+  +builder()$ Builder
+  +getValorTotal() BigDecimal
+}
+class Builder["ServicioAlquiler.Builder"] {
+  +numero(int) Builder
+  +fechaAlquiler(LocalDate) Builder
+  +cliente(Cliente) Builder
+  +empleado(Empleado) Builder
+  +prenda(Prenda) Builder
+  +build() ServicioAlquiler
+}
+ServicioAlquiler ..> Builder : builder()
+Builder ..> ServicioAlquiler : crea
+ServicioAlquiler --> "1" Cliente
+ServicioAlquiler --> "1" Empleado
+ServicioAlquiler *--> "1" GrupoPrendas : prendas
+
+class FabricaPrenda {
+  <<abstract>>
+  +para(TipoPrenda)$ FabricaPrenda
+  +crear(DatosPrenda) Prenda
+  #crearPrenda(...) Prenda*
+}
+class FabricaVestidoDama
+class FabricaTrajeCaballero
+class FabricaDisfraz
+FabricaPrenda <|-- FabricaVestidoDama
+FabricaPrenda <|-- FabricaTrajeCaballero
+FabricaPrenda <|-- FabricaDisfraz
+FabricaVestidoDama ..> VestidoDama : crea
+FabricaTrajeCaballero ..> TrajeCaballero : crea
+FabricaDisfraz ..> Disfraz : crea
+
+class ConexionBD {
+  <<Singleton>>
+  -ConexionBD instancia$
+  -Connection conexion
+  -ConexionBD()
+  +getInstancia()$ ConexionBD
+  +getConexion() Connection
+}
